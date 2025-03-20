@@ -40,7 +40,7 @@ export const login = async (req:Request, res:Response) => {
     // revisaar correo si existe
     if (!user) {
         const error = new Error('El usuario no existe')
-        res.status(400).json({error:error})
+        res.status(400).json({error:error.message})
         return
     }
     // revisar contrasena
@@ -49,7 +49,7 @@ export const login = async (req:Request, res:Response) => {
     console.log(passwordCheck)
     if (!passwordCheck){
         const error = new Error('Password Incorrecta')
-        res.status(401).json({error: error})
+        res.status(401).json({error: error.message})
         return
     } 
 

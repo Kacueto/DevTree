@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+
 import User from "../models/User"
 import { checkPassword, hashPassword } from "../utils/auth"
 import { generateJWT } from "../utils/jwt"
@@ -6,7 +7,7 @@ import { generateJWT } from "../utils/jwt"
 
 export const createAccount = async (req: Request, res: Response) => {
     // manejar errores
-    
+
     const { email, password } = req.body
     const userExists = await User.findOne
         ({ email })
@@ -33,26 +34,31 @@ export const createAccount = async (req: Request, res: Response) => {
     res.status(201).send('Usuario registrado')
 }
 
-export const login = async (req:Request, res:Response) => {
-    
-   
+export const login = async (req: Request, res: Response) => {
+
+
     const { email, password } = req.body
-    const user = await User.findOne({email})
+    const user = await User.findOne({ email })
     // revisaar correo si existe
     if (!user) {
         const error = new Error('El usuario no existe')
-        res.status(400).json({error:error.message})
+        res.status(400).json({ error: error.message })
         return
     }
     // revisar contrasena
     console.log("Usuario si existe...")
-    const passwordCheck = await checkPassword(password,user.password)
+    const passwordCheck = await checkPassword(password, user.password)
     console.log(passwordCheck)
-    if (!passwordCheck){
+    if (!passwordCheck) {
         const error = new Error('Password Incorrecta')
-        res.status(401).json({error: error.message})
+        res.status(401).json({ error: error.message })
         return
-    } 
-    const token = generateJWT({id:user._id})
+    }
+    const token = generateJWT({ id: user._id })
     res.send(token)
+}
+
+export const getUser = async (req: Request, res: Response) => {
+    res.json(req.user)
+    
 }

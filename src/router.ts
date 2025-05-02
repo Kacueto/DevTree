@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { body } from "express-validator"
-import { createAccount, getUser, login } from "./handlers";
+import { createAccount, getUser, login, updateProfile } from "./handlers";
 import { handleInputError } from "./middleware/validation";
 import { authenticate } from "./middleware/auth";
 const router = Router()
@@ -33,6 +33,17 @@ router.post('/auth/login',
     login
 )
 
-router.get('/user',authenticate, getUser)
+router.get('/user', authenticate, getUser)
 
+router.patch('/user',
+    body('handle')
+        .notEmpty()
+        .withMessage("El Handle no puede ir vacio"),
+    body('description')
+        .notEmpty()
+        .withMessage("La descripcion no puede ir vacio"), 
+        handleInputError,
+        authenticate, 
+        updateProfile
+    )
 export default router
